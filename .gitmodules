@@ -1,0 +1,3 @@
+[submodule "pazusoba"]
+	path = pazusoba
+	url = https://github.com/HenryQuan/pazusoba.git
