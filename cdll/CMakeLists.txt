@@ -9,6 +9,14 @@ add_library(
     sort SHARED
     library.cpp
 )
+
+# use a uniform name
+set_target_properties(
+    sort PROPERTIES 
+    SUFFIX ".so"
+)
+
+# run main.py after building
 add_custom_command(
     TARGET sort
     COMMENT "Run main.py"

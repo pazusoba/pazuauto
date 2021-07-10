@@ -1,4 +1,5 @@
-extern "C" int* sortArray(int* list, int size) {
+
+extern "C" void sortArray(int* list, int size) {
     int temp, i, j;
 
     for (i = 0; i < size; i++) {
@@ -10,6 +11,4 @@ extern "C" int* sortArray(int* list, int size) {
             }
         }
     }
-
-    return list;
 }
