@@ -5,22 +5,31 @@ project(
     DESCRIPTION "Call C++ code from Python"
 )
 
+# use a uniform name
+set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
+
+# sort a python list in C++
 add_library(
     sort SHARED
-    library.cpp
+    sort.cpp
 )
-
-# use a uniform name
-set_target_properties(
-    sort PROPERTIES 
-    SUFFIX ".so"
-)
-
-# run main.py after building
 add_custom_command(
     TARGET sort
-    COMMENT "Run main.py"
+    COMMENT "Test sort"
     POST_BUILD 
-    COMMAND python main.py
+    COMMAND python sort.py
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+)
+
+# return a C/C++ struct to python
+add_library(
+    class SHARED
+    class.cpp
+)
+add_custom_command(
+    TARGET class
+    COMMENT "Test class"
+    POST_BUILD 
+    COMMAND python class.py
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 )
