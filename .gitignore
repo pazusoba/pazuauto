@@ -1,2 +1,5 @@
 # CMake bulid folder
 build/
+
+# Built binary in automation folder
+automation/pazusoba*

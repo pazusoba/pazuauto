@@ -17,7 +17,7 @@ add_custom_command(
     TARGET sort
     COMMENT "Test sort"
     POST_BUILD 
-    COMMAND python sort.py
+    COMMAND python3 sort.py
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 )
 
@@ -30,6 +30,6 @@ add_custom_command(
     TARGET class
     COMMENT "Test class"
     POST_BUILD 
-    COMMAND python class.py
+    COMMAND python3 class.py
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 )
