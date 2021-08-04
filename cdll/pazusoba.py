@@ -14,25 +14,25 @@ class Route(Structure):
 
 # mac only for now, need to rename to libpazuosba.so
 libpazusoba = CDLL("../build/pazusoba/libpazusoba.dylib", winmode=0)
-
-libpazusoba.solve.restype = None
-libpazusoba.solve.argtypes = (c_int, POINTER(POINTER(c_char)))
+libpazusoba.solve.restype = Route
+libpazusoba.solve.argtypes = (c_int, POINTER(c_char_p))
+# have a look, https://stackoverflow.com/a/24061473
 
 
 def solve(arguments: List[str]) -> Route:
-    byte_argv = bytearray()
-    size = 0
+    # additional step is required here because Mac is stricter than Windows
+    argv = []
     for s in arguments:
-        b = bytearray(s, 'utf-8')
-        byte_argv += b
-        size += len(b)
-    print(byte_argv)
-    argv = (c_char * (size + 1))(*byte_argv)
-    argc: int = len(arguments) + 1
-    return libpazusoba.solve(argc, argv)
+        argv.append(c_char_p(s.encode('ascii')))
+        # argv.append(create_string_buffer(s.encode('ascii')))
+    print(argv)
+    c_argc = len(arguments)
+    c_argv = (c_char_p * c_argc)()
+    c_argv[:] = argv
+    print(c_argv._objects)
+    return libpazusoba.solve(c_argc, c_argv)
 
 
 if __name__ == '__main__':
-    route = solve(
-        ["pazusoba", "RHLBDGPRHDRJPJRHHJGRDRHLGLPHBB", "3", "50", "10000"])
+    route = solve(["", "RHLBDGPRHDRJPJRHHJGRDRHLGLPHBB", "3", "50", "10000"])
     print(route)
