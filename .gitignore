@@ -2,4 +2,4 @@
 build/
 
 # Built binary in automation folder
-automation/pazusoba*
+automation/pazusoba.so
