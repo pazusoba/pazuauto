@@ -195,5 +195,5 @@ def __doPuzzle():
         return True
 
 if __name__ == "__main__":
-    game_loop()
-    # manual_loop()
+    # game_loop()
+    manual_loop()

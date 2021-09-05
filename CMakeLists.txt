@@ -12,6 +12,6 @@ add_subdirectory(pazusoba EXCLUDE_FROM_ALL)
 set_target_properties(
     pazuauto
     PROPERTIES 
-    OUTPUT_NAME "pazusoba.so"
+    OUTPUT_NAME "pazusoba"
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/automation"
 )
