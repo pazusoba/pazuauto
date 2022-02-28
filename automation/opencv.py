@@ -8,6 +8,7 @@ A collection of opencv methods
 import subprocess
 import os
 import time
+import pazusoba
 
 # OpenCV
 import cv2 as cv
@@ -152,10 +153,8 @@ def run():
     # detect the colour of every orb and output a string, the list is in order so simple join the list will do
     return detectColourFrom(orbs)
 
-def getSolution(input: str) -> list:
+def getSolution(input: str) -> list[pazusoba.Location]:
     print("- SOLVING -")
-    if os.path.exists("path.pazusoba"):
-        os.remove("path.pazusoba")
 
     start = time.time()
     solution = []
@@ -164,24 +163,14 @@ def getSolution(input: str) -> list:
     # make sure a solution is written to the disk
     while not completed:
         # Ignore output from the program
-        pazusoba = subprocess.Popen([getExcutableName(), input, '3', '30', '8000'], stdout=subprocess.DEVNULL)
-        pazusoba.wait()
+        # pazusoba = subprocess.Popen([getExcutableName(), input, '3', '30', '8000'], stdout=subprocess.DEVNULL)
+        # pazusoba.wait()
 
-        output_file = "path.pazusoba"
-        if os.path.exists(output_file):
-            with open(output_file, 'r') as p:
-                solution = p.read().split('|')[:-1]
-            # convert to int list
-            solution = list(map(lambda x: list(map(int, x.split(','))), solution))
-            completed = True
-        else:
-            failed_count += 1
-            print("=> Failed {}...".format(failed_count))
-            if failed_count > 10:
-                exit("=> The main program isn't working as expected")
+        solution = pazusoba.explore([getExcutableName(), input, '3', '100', '5000'])
+        completed = True
     print("=> It took %.3fs." % (time.time() - start))
 
-    return shorten(solution)
+    return solution.routes
 
 def shorten(solution: list) -> list:
    print("- SIMPLIFYING -")

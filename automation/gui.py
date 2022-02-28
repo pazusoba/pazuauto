@@ -4,13 +4,14 @@ A collection of pyautogui method
 
 import time
 import pyautogui
+import pazusoba
 
 from config import BOARD_LOCATION, DEBUG_MODE
 from random import randint
 from screenshot import take_screenshot
 from utils import getColumnRow, getMonitorParamsFrom
 
-def perform(route: list, snapshot=True):
+def perform(route: list[pazusoba.Location], snapshot=True):
     """
     Perform the best route step by step
     """
@@ -33,7 +34,7 @@ def perform(route: list, snapshot=True):
     
     for i in range(step):
         curr = route[i]
-        x, y = curr
+        x, y = curr.row, curr.column
         target_x = x_start + y * orb_height
         target_y = y_start + x * orb_height
         if i == 0:
