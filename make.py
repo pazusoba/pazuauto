@@ -18,6 +18,14 @@ def _clean(folder: str):
     if os.path.exists(folder):
         shutil.rmtree(folder)
 
+def experiment():
+    if platform.system() == "Windows":
+        os.system("cd pazusoba/experiment && mingw32-make so")
+        os.system("move .\pazusoba\experiment\libpazusoba.so .\\automation\\")
+    else:
+        os.system("cd pazusoba/experiment && make so")
+        os.system("mv pazusoba/experiment/libpazusoba.so automation/")
+
 argv = sys.argv
 argc = len(argv)
 if argc <= 1:
@@ -26,5 +34,7 @@ elif argc == 2:
     option = argv[1]
     if option == "clean":
         clean()
+    if option == "experiment":
+        experiment()
     else:
         exit("Unknown command - (clean) avilable")
