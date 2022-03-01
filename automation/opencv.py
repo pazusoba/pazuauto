@@ -17,6 +17,7 @@ import numpy as np
 # Automation
 import pyautogui as gui
 from screenshot import *
+from typing import List
 
 from config import SCREEN_SCALE, BOARD_UNIFORM_SIZE, BOARD_LOCATION, BOARD_UNIFORM_SIZE, ORB_COUNT, \
     BORDER_LENGTH, ORB_TEMPLATE_SIZE, DEBUG_MODE
@@ -153,7 +154,7 @@ def run():
     # detect the colour of every orb and output a string, the list is in order so simple join the list will do
     return detectColourFrom(orbs)
 
-def getSolution(input: str) -> list[pazusoba.Location]:
+def getSolution(input: str) -> List[pazusoba.Location]:
     print("- SOLVING -")
 
     start = time.time()
@@ -166,11 +167,11 @@ def getSolution(input: str) -> list[pazusoba.Location]:
         # pazusoba = subprocess.Popen([getExcutableName(), input, '3', '30', '8000'], stdout=subprocess.DEVNULL)
         # pazusoba.wait()
 
-        solution = pazusoba.explore([getExcutableName(), input, '3', '100', '5000'])
+        solution = pazusoba.explore([getExcutableName(), input, '3', '150', '10000'])
         completed = True
     print("=> It took %.3fs." % (time.time() - start))
 
-    return solution.routes
+    return solution.simplified_routes
 
 def shorten(solution: list) -> list:
    print("- SIMPLIFYING -")

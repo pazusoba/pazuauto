@@ -6,12 +6,13 @@ import time
 import pyautogui
 import pazusoba
 
+from typing import List
 from config import BOARD_LOCATION, DEBUG_MODE
 from random import randint
 from screenshot import take_screenshot
 from utils import getColumnRow, getMonitorParamsFrom
 
-def perform(route: list[pazusoba.Location], snapshot=True):
+def perform(route: List[pazusoba.Location], snapshot=True):
     """
     Perform the best route step by step
     """
