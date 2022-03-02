@@ -41,7 +41,7 @@ def perform(route: List[pazusoba.Location], snapshot=True):
         if i == 0:
             __holdLeftKey(target_x, target_y)  
         else:
-            __moveTo(target_x, target_y, ultra_fast=True, random=True)
+            __moveTo(target_x, target_y, ultra_fast=True, random=False)
 
     # only release it when everything are all done
     pyautogui.mouseUp()
@@ -56,6 +56,14 @@ def perform(route: List[pazusoba.Location], snapshot=True):
     if snapshot:
         # save final solution
         take_screenshot(getMonitorParamsFrom(BOARD_LOCATION), write2disk=True, name="route.png")
+
+def hold(x, y):
+    """
+    Hold the left mouse key down
+    """
+    pyautogui.moveTo(x, y)
+    pyautogui.mouseDown()
+    pyautogui.mouseUp()
 
 def __holdLeftKey(x, y, repeat=True):
     """

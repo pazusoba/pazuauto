@@ -15,10 +15,11 @@ import cv2 as cv
 import numpy as np
 
 # Automation
-import pyautogui as gui
+import pyautogui
 from screenshot import *
 from typing import List
 
+import gui
 from config import SCREEN_SCALE, BOARD_UNIFORM_SIZE, BOARD_LOCATION, BOARD_UNIFORM_SIZE, ORB_COUNT, \
     BORDER_LENGTH, ORB_TEMPLATE_SIZE, DEBUG_MODE
 from utils import getMonitorParamsFrom, getColumnRow, getExcutableName
@@ -152,7 +153,36 @@ def run():
     orbs = getOrbListFrom(src)
 
     # detect the colour of every orb and output a string, the list is in order so simple join the list will do
-    return detectColourFrom(orbs)
+    first_run = detectColourFrom(orbs)
+    if not '?' in first_run:
+        check_begin = time.time()
+        # try check all ? manually it manually
+        monitor = getMonitorParamsFrom(BOARD_LOCATION)
+        top = monitor["top"]
+        left = monitor["left"]
+        w, h = monitor["width"], monitor["height"]
+        column, row = getColumnRow()
+        orb_w = int(w / column)
+        orb_h = int(h / row)
+        for i in range(len(first_run)):
+            # if first_run[i] == '?':
+            c = i % column
+            r = i // column
+            x = left + orb_w * (c + 0.5)
+            y = top + orb_h * (r + 0.8) 
+            # gui.hold(x, y)
+            pyautogui.moveTo(x, y)
+            if i == 0:
+                pyautogui.click()
+            pyautogui.mouseDown(duration=0.1)
+            # this can capture all orbs
+            take_screenshot({'top': top + orb_w * r, 
+            'left': left + orb_h * c, 
+            'width': orb_w, 'height': orb_h}, write2disk=True, name='orb{}.png'.format(i))
+            pyautogui.mouseUp()
+
+    return None
+    return first_run
 
 def getSolution(input: str) -> List[pazusoba.Location]:
     print("- SOLVING -")
