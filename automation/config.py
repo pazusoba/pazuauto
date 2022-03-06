@@ -18,7 +18,7 @@ ONE_CYCLE = 500
 # Game is the entire game without status bar
 # Board is only the board area
 GAME_LOCATION  = [255, 119, 702, 988]
-BOARD_LOCATION = [1857, 756, 2552, 1330]
+BOARD_LOCATION = [1806, 761, 2550, 1374]
 
 # When in DEBUG mode, more texts will be printed
 DEBUG_MODE = True

@@ -8,7 +8,7 @@ A collection of opencv methods
 import subprocess
 import os
 import time
-import pazusoba
+from pazusoba import *
 
 # OpenCV
 import cv2 as cv
@@ -154,37 +154,36 @@ def run():
 
     # detect the colour of every orb and output a string, the list is in order so simple join the list will do
     first_run = detectColourFrom(orbs)
-    if not '?' in first_run:
-        check_begin = time.time()
-        # try check all ? manually it manually
-        monitor = getMonitorParamsFrom(BOARD_LOCATION)
-        top = monitor["top"]
-        left = monitor["left"]
-        w, h = monitor["width"], monitor["height"]
-        column, row = getColumnRow()
-        orb_w = int(w / column)
-        orb_h = int(h / row)
-        for i in range(len(first_run)):
-            # if first_run[i] == '?':
-            c = i % column
-            r = i // column
-            x = left + orb_w * (c + 0.5)
-            y = top + orb_h * (r + 0.8) 
-            # gui.hold(x, y)
-            pyautogui.moveTo(x, y)
-            if i == 0:
-                pyautogui.click()
-            pyautogui.mouseDown(duration=0.1)
-            # this can capture all orbs
-            take_screenshot({'top': top + orb_w * r, 
-            'left': left + orb_h * c, 
-            'width': orb_w, 'height': orb_h}, write2disk=True, name='orb{}.png'.format(i))
-            pyautogui.mouseUp()
+    # if '?' in first_run:
+    #     check_begin = time.time()
+    #     # try check all ? manually it manually
+    #     monitor = getMonitorParamsFrom(BOARD_LOCATION)
+    #     top = monitor["top"]
+    #     left = monitor["left"]
+    #     w, h = monitor["width"], monitor["height"]
+    #     column, row = getColumnRow()
+    #     orb_w = int(w / column)
+    #     orb_h = int(h / row)
+    #     for i in range(len(first_run)):
+    #         # if first_run[i] == '?':
+    #         c = i % column
+    #         r = i // column
+    #         x = left + orb_w * (c + 0.5)
+    #         y = top + orb_h * (r + 0.8) 
+    #         # gui.hold(x, y)
+    #         pyautogui.moveTo(x, y)
+    #         if i == 0:
+    #             pyautogui.click()
+    #         pyautogui.mouseDown(duration=0.1)
+    #         # this can capture all orbs
+    #         take_screenshot({'top': top + orb_w * r, 
+    #         'left': left + orb_h * c, 
+    #         'width': orb_w, 'height': orb_h}, write2disk=True, name='orb{}.png'.format(i))
+    #         pyautogui.mouseUp()
 
-    return None
     return first_run
 
-def getSolution(input: str) -> List[pazusoba.Location]:
+def getSolution(input: str) -> List[Location]:
     print("- SOLVING -")
 
     start = time.time()
@@ -197,7 +196,11 @@ def getSolution(input: str) -> List[pazusoba.Location]:
         # pazusoba = subprocess.Popen([getExcutableName(), input, '3', '30', '8000'], stdout=subprocess.DEVNULL)
         # pazusoba.wait()
 
-        solution = pazusoba.explore([getExcutableName(), input, '3', '150', '10000'])
+        solution = adventureEx(input, 3, 100, 1000, [
+            # Profile(ProfileName.SHAPE_PLUS, threshold=100),
+            Profile(name=ProfileName.CONNECTED_ORB, target=4, threshold=100),
+            Profile(name=ProfileName.COMBO),
+        ])
         completed = True
     print("=> It took %.3fs." % (time.time() - start))
 
