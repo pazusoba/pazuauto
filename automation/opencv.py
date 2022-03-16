@@ -203,8 +203,9 @@ def getSolution(input: str) -> List[Location]:
         ])
         completed = True
     print("=> It took %.3fs." % (time.time() - start))
+    print(solution.board)
 
-    return solution.simplified_routes
+    return solution.routes
 
 def shorten(solution: list) -> list:
    print("- SIMPLIFYING -")
