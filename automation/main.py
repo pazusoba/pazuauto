@@ -30,6 +30,7 @@ def game_loop():
     # prevent excessive computation
     puzzle_after_cycles = 0
     getting_rewards = False
+    fever_mode = False
 
     MONITOR = getMonitorParamsFrom(GAME_LOCATION)
 
@@ -52,14 +53,15 @@ def game_loop():
                 ])
                 print("=> Lose. Give Up")
             
-            # Rank Fever mode always show something in the begining
-            feverMode = find(u"game/rank/fever.png", game_img)[0]
             # Clear or Game Over
             if tap(u"game/buttons/ok.png", game_img):
-                if not feverMode:
+                if not fever_mode:
                     print("=> Exiting the dungeon")
                     in_dungeon = False
                     waitForNextCycle()
+                else:
+                    print("=> Start fever mode")
+                    fever_mode = False
                 continue
             
             # Orbs are still falling, wait
@@ -127,6 +129,7 @@ def game_loop():
             #     continue
             elif tap(u"game/rank/gacha.png", game_img):
                 print("=> Rank Fever Mode")
+                fever_mode = True
                 continue
             elif tap(u"game/buttons/challenge.png", game_img):
                 print("=> Challenge")
@@ -195,5 +198,5 @@ def __doPuzzle():
         return True
 
 if __name__ == "__main__":
-    # game_loop()
-    manual_loop()
+    game_loop()
+    # manual_loop()

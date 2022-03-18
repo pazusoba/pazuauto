@@ -101,6 +101,7 @@ def tap(template: str, img, delay=1) -> bool:
         gui.moveTo(x, y)
         gui.mouseDown()
         gui.mouseUp()
+        gui.click(clicks=2)
 
         waitForCycles(delay)
     return found
