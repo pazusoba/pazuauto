@@ -45,6 +45,13 @@ def game_loop():
                 print("=> In a dungeon - {}".format(in_dungeon))
 
         if in_dungeon:
+            # make sure challenge is tapped 
+            if tap(u"game/buttons/challenge.png", game_img):
+                print("=> Challenge")
+                in_dungeon = True
+                puzzle_after_cycles = 6
+                continue
+
             # never continue
             if tap(u"game/battle/continue.png", game_img):
                 tapInOrder([

@@ -83,6 +83,6 @@ def __moveTo(x, y, ultra_fast=False, random=False):
         offset = 0 if not random else randint(0, 100)
 
         # NOTE: 50ms is about the minimum time for the game to recognise correctly, less than it will cause some issues
-        time.sleep((70 + offset) / 1000)
+        time.sleep((80 + offset) / 1000)
     else:
         pyautogui.moveTo(x, y)

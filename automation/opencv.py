@@ -196,9 +196,9 @@ def getSolution(input: str) -> List[Location]:
         # pazusoba = subprocess.Popen([getExcutableName(), input, '3', '30', '8000'], stdout=subprocess.DEVNULL)
         # pazusoba.wait()
 
-        solution = adventureEx(input, 3, 150, 2000, [
-            # Profile(ProfileName.COMBO)
-            Profile(ProfileName.SHAPE_L, threshold=100, orbs=[Orb.FIRE, Orb.LIGHT, Orb.WOOD, Orb.WATER]),
+        solution = adventureEx(input, 3, 15, 5000, [
+            Profile(ProfileName.COMBO)
+            # Profile(ProfileName.SHAPE_L, threshold=100, orbs=[Orb.FIRE, Orb.LIGHT, Orb.WOOD, Orb.WATER]),
         ])
         completed = True
     print("=> It took %.3fs." % (time.time() - start))
