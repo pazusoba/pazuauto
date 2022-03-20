@@ -15,27 +15,6 @@ Configurations for the automation (static and dynamic)
 # The cycle of automation
 ONE_CYCLE = 500
 
-import win32gui
-from screenshot import take_screenshot
-def enumHandler(hwnd, lParam):
-    window_name = win32gui.GetWindowText(hwnd).lower()
-    if 'blackhole' in window_name or 'wormwhole' in window_name:
-        rect = win32gui.GetWindowRect(hwnd)
-        x = rect[0]
-        y = rect[1]
-        w = rect[2] - x
-        h = rect[3] - y
-        # ignore (1, 1)
-        if (w > 1 or h > 1):
-            print("Window %s:" % window_name)
-            print("\tLocation: (%d, %d)" % (x, y))
-            print("\t    Size: (%d, %d)" % (w, h))
-            print(rect)
-
-            take_screenshot({"top": y + 58, "left": x + 118, "width": w - 140, "height": h - 90}, write2disk=True)
-
-win32gui.EnumWindows(enumHandler, None)
-
 # Game is the entire game without status bar
 # Board is only the board area
 GAME_LOCATION  = [1897, 149, 2536, 1265]
