@@ -60,7 +60,7 @@ def get_location_automatically():
         template = cv.imread("template/board.png", 0)
         m = cv.matchTemplate(gray, template, cv.TM_CCOEFF_NORMED)
         board_offset = None
-        for loc in zip(*np.where(m >= 0.75)[::-1]):
+        for loc in zip(*np.where(m >= 0.8)[::-1]):
             board_offset = int(loc[1])
             break
 

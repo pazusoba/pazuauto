@@ -162,9 +162,9 @@ def game_loop():
                 print("=> Checking current rank")
                 touch()      
             # try going up one level to normal
-            elif not find(u"game/dungeons/normal.png", game_img)[0]:
-                print("=> One level back")
-                tap(u"game/buttons/up.png", game_img)
+            # elif not find(u"game/dungeons/normal.png", game_img)[0]:
+            #     print("=> One level back")
+            #     tap(u"game/buttons/up.png", game_img)
 
         # NOTE: Never block the loop because it very important to see what's happen
         waitForNextCycle()
