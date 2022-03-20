@@ -15,11 +15,22 @@ Configurations for the automation (static and dynamic)
 # The cycle of automation
 ONE_CYCLE = 500
 
-# Game is the entire game without status bar
-# Board is only the board area
-GAME_LOCATION  = [1897, 149, 2536, 1265]
-BOARD_LOCATION = [1896, 730, 2535, 1263]
+# read location from game.loc
+import os
+if os.path.exists('game.loc'):
+    with open('game.loc', 'r') as loc:
+        last_location = eval(loc.read())
 
+    (game, board) = last_location
+    if (game is None) or (board is None):
+        print('Failed to reading locations')
+        exit(-1)
+    else:
+        GAME_LOCATION  = game
+        BOARD_LOCATION = board
+else:
+    print("Setup game location first with location.py")
+    exit(-1)
 
 # When in DEBUG mode, more texts will be printed
 DEBUG_MODE = True

@@ -56,7 +56,7 @@ def get_location_automatically():
         
         game_img = np.array(take_screenshot({"top": top, "left": left, "width": width, "height": height}))
         gray = cv.cvtColor(game_img, cv.COLOR_BGR2GRAY)
-        # find the offset here
+        # find the offset here, the template is the tiny gap above the first row
         template = cv.imread("template/board.png", 0)
         m = cv.matchTemplate(gray, template, cv.TM_CCOEFF_NORMED)
         board_offset = None
@@ -65,13 +65,19 @@ def get_location_automatically():
             break
 
         if board_offset is None:
-            print('Failed to find board')
+            print('Failed to find board. Go inside any dungeon to setup properly.')
+            exit(-1)
         else:
             print('Get board offset of {}'.format(board_offset))
 
         take_screenshot({"top": top + board_offset, "left": left, "width": width, "height": height - board_offset}, write2disk=True)
+        # board and game location
+        with open('game.loc', 'w') as loc:
+            loc.write(str(([left, top, left + width, top + height], 
+                [left, top + board_offset, left + width, top + height]))) 
     else:
         print('Window not found')
+        exit(-1)
 
 def clearAllWindows():
     cv.waitKey()

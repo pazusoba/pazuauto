@@ -4,3 +4,5 @@ build/
 # Built binary in automation folder
 automation/pazusoba.so
 automation/*.so
+# Board location file
+**/*.loc
