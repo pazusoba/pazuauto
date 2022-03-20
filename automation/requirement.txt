@@ -4,3 +4,4 @@ opencv-python
 pyautogui
 mss
 pywin32
+autopep8

@@ -15,6 +15,8 @@ from typing import List
 
 import win32gui
 from screenshot import take_screenshot
+
+
 def enumHandler(hwnd, lParam):
     window_name = win32gui.GetWindowText(hwnd).lower()
     if 'blackhole' in window_name or 'wormwhole' in window_name:
@@ -28,6 +30,7 @@ def enumHandler(hwnd, lParam):
             global location
             location = [x, y, w, h]
 
+
 def get_location_manually() -> List[int]:
     """
     Get the board location on the screen
@@ -37,8 +40,10 @@ def get_location_manually() -> List[int]:
     input('Move to bottom right of the board and press enter')
     two = gui.position()
 
-    print("Board Location - [{}, {}, {}, {}]".format(one.x, one.y, two.x, two.y))
+    print(
+        "Board Location - [{}, {}, {}, {}]".format(one.x, one.y, two.x, two.y))
     return [one.x, one.y, two.x, two.y]
+
 
 def get_location_automatically():
     """
@@ -46,15 +51,44 @@ def get_location_automatically():
     """
     win32gui.EnumWindows(enumHandler, None)
     if (location != None):
-        print('Found window at {}'.format(location))
         [x, y, w, h] = location
+        if x < 0 or y < 0:
+            print("The window is not visible on the screen")
+            exit(-1)
+        print('Found window at {}'.format(location))
+        window_img = np.array(take_screenshot(
+            {"top": y, "left": x, "width": w, "height": h}))
+
+        # find the rectangle contour
+        gray_window = cv.cvtColor(window_img, cv.COLOR_BGR2GRAY)
+        # the interface is white so it is easy to filter out
+        _, binary = cv.threshold(gray_window, 254, 255, cv.THRESH_BINARY)
+
+        (contours, _) = cv.findContours(
+            binary, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+
+        for contour in contours:
+            if cv.contourArea(contour) > 10000:
+                (left, top, width, height) = cv.boundingRect(contour)
+                cv.rectangle(window_img, (left, top),
+                             (left+width, top+height), (0, 255, 0), 2)
+                break
+
+        cv.imshow("Window", window_img)
+        cv.waitKey()
+
+        if top == None:
+            print("Unable to determine the location of the game")
+            exit(-1)
+
         # adjust it with manual offset because blackhole has additional controls
-        top = y + 58
-        left = x + 118
-        width = w - 140
-        height = h - 90
-        
-        game_img = np.array(take_screenshot({"top": top, "left": left, "width": width, "height": height}))
+        # top = y + 58
+        # left = x + 118
+        # width = w - 140
+        # height = h - 90
+
+        game_img = np.array(take_screenshot(
+            {"top": top, "left": left, "width": width, "height": height}))
         gray = cv.cvtColor(game_img, cv.COLOR_BGR2GRAY)
         # find the offset here, the template is the tiny gap above the first row
         template = cv.imread("template/board.png", 0)
@@ -70,18 +104,21 @@ def get_location_automatically():
         else:
             print('Get board offset of {}'.format(board_offset))
 
-        take_screenshot({"top": top + board_offset, "left": left, "width": width, "height": height - board_offset}, write2disk=True)
+        take_screenshot({"top": top + board_offset, "left": left,
+                        "width": width, "height": height - board_offset}, write2disk=True)
         # board and game location
         with open('game.loc', 'w') as loc:
-            loc.write(str(([left, top, left + width, top + height], 
-                [left, top + board_offset, left + width, top + height]))) 
+            loc.write(str(([left, top, left + width, top + height],
+                           [left, top + board_offset, left + width, top + height])))
     else:
         print('Window not found')
         exit(-1)
 
+
 def clearAllWindows():
     cv.waitKey()
     cv.destroyAllWindows()
+
 
 # this check if this script is being executed instead of using as a module
 if __name__ == "__main__":
