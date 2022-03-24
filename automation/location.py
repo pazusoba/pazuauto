@@ -6,30 +6,14 @@ import pyautogui as gui
 
 import cv2 as cv
 import numpy as np
+import sys
 
 import mss
 import mss.tools
 
 from typing import List
 
-
-import win32gui
 from screenshot import take_screenshot
-
-
-def enumHandler(hwnd, lParam):
-    window_name = win32gui.GetWindowText(hwnd).lower()
-    if 'blackhole' in window_name or 'wormwhole' in window_name:
-        rect = win32gui.GetWindowRect(hwnd)
-        x = rect[0]
-        y = rect[1]
-        w = rect[2] - x
-        h = rect[3] - y
-        # ignore (1, 1)
-        if (w > 100 or h > 100):
-            global location
-            location = [x, y, w, h]
-
 
 def get_location_manually() -> List[int]:
     """
@@ -44,12 +28,65 @@ def get_location_manually() -> List[int]:
         "Board Location - [{}, {}, {}, {}]".format(one.x, one.y, two.x, two.y))
     return [one.x, one.y, two.x, two.y]
 
-
 def get_location_automatically():
     """
     Get the board location automatically on the screen
     """
-    win32gui.EnumWindows(enumHandler, None)
+    location = None
+    if sys.platform == "win32":
+        import win32gui
+        def enumHandler(hwnd, lParam):
+            window_name = win32gui.GetWindowText(hwnd).lower()
+            if 'blackhole' in window_name or 'wormwhole' in window_name:
+                rect = win32gui.GetWindowRect(hwnd)
+                x = rect[0]
+                y = rect[1]
+                w = rect[2] - x
+                h = rect[3] - y
+                # ignore (1, 1)
+                if (w > 100 or h > 100):
+                    location = [x, y, w, h]
+        win32gui.EnumWindows(enumHandler, None)
+    elif sys.platform == "darwin":
+        with mss.mss() as sct:
+            # Get information of monitor 2
+            monitor_number = 2
+            mon = sct.monitors[monitor_number]
+
+            # The screen part to capture
+            monitor = {
+                "top": mon["top"],
+                "left": mon["left"],
+                "width": mon["width"],
+                "height": mon["height"],
+                "mon": monitor_number,
+            }
+            output = "sct-mon{mon}_{top}x{left}_{width}x{height}.png".format(**monitor)
+
+            # Grab the data
+            window_img = np.array(sct.grab(monitor))
+
+            # find the rectangle contour
+            gray_window = cv.cvtColor(window_img, cv.COLOR_BGR2GRAY)
+            # the interface is white so it is easy to filter out
+            _, binary = cv.threshold(gray_window, 254, 255, cv.THRESH_BINARY)
+
+            cv.imwrite("binary.png", binary)
+
+            (contours, _) = cv.findContours(
+                binary, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+
+            for contour in contours:
+                if cv.contourArea(contour) > 500000:
+                    (left, top, width, height) = cv.boundingRect(contour)
+                    cv.rectangle(window_img, (left, top),
+                                (left+width, top+height), (0, 255, 0), 10)
+
+            cv.imwrite("windows.png", window_img)
+    else:
+        print("linux?")
+
+
     if (location != None):
         [x, y, w, h] = location
         if x < 0 or y < 0:
