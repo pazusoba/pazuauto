@@ -6,11 +6,12 @@ import os
 import time
 
 import numpy as np
+import sys
+sys.path.append("src")
 
-import opencv
-import gui
+from src import opencv, gui
 
-from config import DEBUG_MODE, BOARD_LOCATION, GAME_LOCATION
+from config import Config
 from utils import waitForCycles, waitForNextCycle, getMonitorParamsFrom
 from automation import tapInOrder, find, tap, touch
 from screenshot import take_screenshot

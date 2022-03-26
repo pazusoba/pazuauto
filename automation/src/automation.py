@@ -10,9 +10,9 @@ from typing import Tuple, List
 
 from utils import waitForCycles, waitForNextCycle
 import pyautogui as gui
-from config import GAME_LOCATION, GAME_SCREEN_SIZE_16_9, GAME_SCREEN_SIZE_2_1, GAME_SCREEN_SIZE_3_2, \
-    SCREEN_SCALE, SORT_OFFSET, ONE_CYCLE
+from config import Config
 
+# TODO: need to be moved out of here
 left, top, end_left, end_top = GAME_LOCATION
 width = (end_left - left) * SCREEN_SCALE
 height = (end_top - top) * SCREEN_SCALE

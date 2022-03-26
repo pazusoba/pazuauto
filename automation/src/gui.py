@@ -7,7 +7,7 @@ import pyautogui
 import pazusoba
 
 from typing import List
-from config import BOARD_LOCATION, DEBUG_MODE
+from config import Config
 from random import randint
 from screenshot import take_screenshot
 from utils import getColumnRow, getMonitorParamsFrom
@@ -16,11 +16,11 @@ def perform(route: List[pazusoba.Location], snapshot=True):
     """
     Perform the best route step by step
     """
-
-    if DEBUG_MODE:
+    config = Config()
+    if config.debug_mode:
         print("- PERFORMING -")
     # setup everything
-    left, top, end_left, end_top = BOARD_LOCATION
+    left, top, end_left, end_top = config.board_location
     _, row = getColumnRow()
     orb_height = (end_top - top) / row
     x_start = left + orb_height / 2
@@ -28,7 +28,7 @@ def perform(route: List[pazusoba.Location], snapshot=True):
 
     # save current position
     (px, py) = pyautogui.position()
-    if DEBUG_MODE:
+    if config.debug_mode:
         step = len(route)
         print("=> {} steps".format(step))
         start = time.time()
@@ -46,7 +46,7 @@ def perform(route: List[pazusoba.Location], snapshot=True):
     # only release it when everything are all done
     pyautogui.mouseUp()
     print("=> Done")
-    if DEBUG_MODE:
+    if config.debug_mode:
         print("=> It took %.3fs." % (time.time() - start))
 
     # move back to current position after everything
@@ -55,7 +55,7 @@ def perform(route: List[pazusoba.Location], snapshot=True):
 
     if snapshot:
         # save final solution
-        take_screenshot(getMonitorParamsFrom(BOARD_LOCATION), write2disk=True, name="route.png")
+        take_screenshot(getMonitorParamsFrom(config.board_location), write2disk=True, name="route.png")
 
 def hold(x, y):
     """
