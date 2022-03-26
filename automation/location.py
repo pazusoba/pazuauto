@@ -45,6 +45,7 @@ def get_location_automatically():
                 h = rect[3] - y
                 # ignore (1, 1)
                 if (w > 100 or h > 100):
+                    nonlocal location
                     location = [x, y, w, h]
         win32gui.EnumWindows(enumHandler, None)
     elif sys.platform == "darwin":
