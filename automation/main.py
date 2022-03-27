@@ -16,10 +16,6 @@ from utils import waitForCycles, waitForNextCycle, getMonitorParamsFrom
 from automation import tapInOrder, find, tap, touch
 from screenshot import take_screenshot
 
-current_dir = os.path.abspath(os.getcwd())
-if not current_dir.endswith("automation"):
-    exit("Run main.py inside automation folder. Current path is {}".format(current_dir))
-
 def game_loop():
     """
     The main loop of automation
@@ -206,5 +202,12 @@ def __doPuzzle():
         return True
 
 if __name__ == "__main__":
+    current_dir = os.path.abspath(os.getcwd())
+    if not current_dir.endswith("automation"):
+        exit("Run main.py inside automation folder. Current path is {}".format(current_dir))
+
+    if sys.base_prefix != sys.prefix:
+        print("virtual environment is recommended")
+
     game_loop()
     # manual_loop()
