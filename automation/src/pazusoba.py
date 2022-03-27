@@ -3,7 +3,6 @@ Call methods exported in the shared library
 """
 from ctypes import *
 from typing import List
-import os
 import enum
 
 

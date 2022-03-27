@@ -1,4 +1,4 @@
-from config import BOARD_LOCATION
+from config import Config
 import pyautogui
 
 class Skill:
@@ -8,6 +8,9 @@ class Skill:
     Currently, it might be challenging to know if a skill is used.
     Now, it should only be used for basic things.
     """
+
+    config = Config()
+    board_location = config.board_location
 
     # this shouldn't be changed (probably never)
     numberOfSkills = 6
@@ -19,7 +22,7 @@ class Skill:
     def useNextSkill(self):
         current = self.skillOrder[self.usedSkills]
         # calculate the location
-        left, top, end_left, end_top = BOARD_LOCATION
+        left, top, end_left, end_top = self.board_location
         width = end_left - left
         height = end_top - top
 

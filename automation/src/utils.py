@@ -4,6 +4,10 @@ Utilities
 
 import time
 import os
+
+import mss
+import mss.tools
+
 from config import ONE_CYCLE, ORB_COUNT, SCREEN_SCALE
 from typing import Tuple, Dict
 
@@ -52,3 +56,16 @@ def getColumnRow() -> Tuple[int, int]:
         return (5, 4)
     else:
         exit("=> Unknown orb count (only support 20, 30 and 42)")
+
+def take_screenshot(monitor, write2disk=False, name="output.png"):
+    # # NOTE: move the cursor outside the game screen so that it doesn't cover up the screen
+    # x = monitor["height"] / 2 + monitor["top"]
+    # y = monitor["width"] + monitor["left"] + 10
+    # pyautogui.moveTo(y, y)
+
+    with mss.mss() as screenshot:
+        screen_raw = screenshot.grab(monitor)
+        # Save to disk TODO: is this still necessary
+        if write2disk:
+            mss.tools.to_png(screen_raw.rgb, screen_raw.size, output=name)
+        return screen_raw

@@ -12,9 +12,8 @@ sys.path.append("src")
 from src import opencv, gui
 
 from config import Config
-from utils import waitForCycles, waitForNextCycle, getMonitorParamsFrom
+from utils import waitForCycles, waitForNextCycle, getMonitorParamsFrom, take_screenshot
 from automation import tapInOrder, find, tap, touch
-from screenshot import take_screenshot
 
 def game_loop():
     """
